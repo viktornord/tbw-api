@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  title: BlockCahin wallet
+  title: BlockChain wallet
   description: ''
   version: 0.0.1
 host: ''
@@ -74,6 +74,58 @@ paths:
           description: 'Updated user'
           schema:
             $ref: '#/definitions/User'
+  /block-chain/mine:
+    get:
+      tags:
+      - 'block chain'
+      summary: Mining coin
+      description: Mining coin
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Block'
+        '500':
+          description: 'Server error'
+          schema:
+            $ref: '#/definitions/BasicError'
+  /transactions:
+    get:
+      tags:
+      - 'transaction'
+      summary: Transactions
+      description: List of transactions for authorized user
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/TransactionList'
+        '500':
+          description: 'Server error'
+          schema:
+            $ref: '#/definitions/BasicError'
+    post:
+      tags:
+      - 'transaction'
+      summary: Create a transaction
+      description: Create a transaction
+      parameters:
+        - in: body
+          name: body
+          description: Amount and destination
+          required: true
+          schema:
+            $ref: '#/definitions/TransactionToCreate'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Transaction'
+        '500':
+          description: 'Server error'
+          schema:
+            $ref: '#/definitions/BasicError'
+
 definitions:
   BasicError:
     type: object
@@ -100,11 +152,47 @@ definitions:
       password:
         type: string
   User:
-      type: object
-      properties:
-        eamil:
-          type: string
-        account:
-          type: string
-        balance:
-          type: number
+    type: object
+    properties:
+      eamil:
+        type: string
+      account:
+        type: string
+      balance:
+        type: number
+  Block:
+    type: object
+    properties:
+      index:
+        type: number
+      createdAt:
+        type: string
+        format: ISODate
+      hash:
+        type: string
+      previousHash:
+        type: string
+      data:
+        type: object
+        properties:
+          proof: number
+  TransactionToCreate:
+    type: object
+    properties:
+      to:
+        type: string
+      amount:
+        type: number
+  Transaction:
+    type: object
+    properties:
+      from:
+        type: string
+      to:
+        type: string
+      amount:
+        type: number
+  TransactionList:
+    type: array
+    items:
+      $ref: "#/definitions/Transaction"
