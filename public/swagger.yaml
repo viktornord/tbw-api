@@ -1,0 +1,110 @@
+swagger: '2.0'
+info:
+  title: BlockCahin wallet
+  description: ''
+  version: 0.0.1
+host: ''
+schemes:
+  - http
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+basePath: /v1
+security:
+  - Bearer: []
+produces:
+  - application/json
+paths:
+  /auth/token:
+      post:
+        tags:
+        - 'auth'
+        summary: Authentication
+        description: |
+          Retrieving access token by user credentions.
+        parameters:
+          - in: body
+            name: body
+            description: User credentials
+            required: true
+            schema:
+              $ref: '#/definitions/UserCredentials'
+        responses:
+          '200':
+            description: ''
+            schema:
+              $ref: '#/definitions/AccessToken'
+          '401':
+            description: 'Unauthorized'
+            schema:
+              $ref: '#/definitions/BasicError'
+  /users/{id}:
+    get:
+      tags:
+      - 'users'
+      summary: 'Get user by id'
+      description: 'Get user by id'
+      parameters:
+        - in: path
+          name: id
+          description: 'User id'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Get user by id'
+          schema:
+            $ref: '#/definitions/User'
+    post:
+      tags:
+      - 'users'
+      summary: 'Create user'
+      description: 'Registration'
+      parameters:
+        - in: body
+          name: body
+          description: 'User data that should be updated'
+          required: true
+          schema:
+            $ref: '#/definitions/UserCredentials'
+      responses:
+        '200':
+          description: 'Updated user'
+          schema:
+            $ref: '#/definitions/User'
+definitions:
+  BasicError:
+    type: object
+    properties:
+      status:
+        type: number
+      message:
+        type: string
+  AccessToken:
+    type: object
+    properties:
+      accessToken:
+        type: string
+      user:
+        type: object
+        properties:
+          _id:
+            type: string
+  UserCredentials:
+    type: object
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+  User:
+      type: object
+      properties:
+        eamil:
+          type: string
+        account:
+          type: string
+        balance:
+          type: number
